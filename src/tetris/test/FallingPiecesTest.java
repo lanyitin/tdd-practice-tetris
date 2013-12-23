@@ -8,10 +8,12 @@ import net.orfjackal.nestedjunit.NestedJUnit;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
+import tetris.impl.Board;
+import tetris.impl.Tetromino;
+
 /**
  * @author Esko Luontola
  */
-@Ignore("contains no test")
 @RunWith(NestedJUnit.class)
 public class FallingPiecesTest extends Assert {
 
@@ -20,7 +22,7 @@ public class FallingPiecesTest extends Assert {
     // - See the README for how to proceed with this refactoring in safe steps
     // - Next step: MovingAFallingPieceTest
 
-/*
+
     private final Board board = new Board(6, 8);
 
 
@@ -42,9 +44,8 @@ public class FallingPiecesTest extends Assert {
                     "........\n", board.toString());
         }
     }
-*/
 
-/*
+
     public class When_a_piece_reaches_the_bottom {
 
         @Before
@@ -68,22 +69,21 @@ public class FallingPiecesTest extends Assert {
             assertTrue(board.hasFalling());
         }
 
-//        @Test
-//        public void it_stops_when_it_hits_the_bottom() {
-//            board.tick();
-//            assertEquals("" +
-//                    "........\n" +
-//                    "........\n" +
-//                    "........\n" +
-//                    "........\n" +
-//                    "....T...\n" +
-//                    "...TTT..\n", board.toString());
-//            assertFalse(board.hasFalling());
-//        }
+        @Test
+        public void it_stops_when_it_hits_the_bottom() {
+            board.tick();
+            assertEquals("" +
+                    "........\n" +
+                    "........\n" +
+                    "........\n" +
+                    "........\n" +
+                    "....T...\n" +
+                    "...TTT..\n", board.toString());
+            assertFalse(board.hasFalling());
+        }
     }
-*/
 
-/*
+
     public class When_a_piece_lands_on_another_piece {
 
         @Before
@@ -120,18 +120,18 @@ public class FallingPiecesTest extends Assert {
             assertTrue(board.hasFalling());
         }
 
-//        @Test
-//        public void it_stops_when_it_hits_the_other_piece() {
-//            board.tick();
-//            assertEquals("" +
-//                    "........\n" +
-//                    "........\n" +
-//                    "....T...\n" +
-//                    "...TTT..\n" +
-//                    "....T...\n" +
-//                    "...TTT..\n", board.toString());
-//            assertFalse(board.hasFalling());
-//        }
+        @Test
+        public void it_stops_when_it_hits_the_other_piece() {
+            board.tick();
+            assertEquals("" +
+                    "........\n" +
+                    "........\n" +
+                    "....T...\n" +
+                    "...TTT..\n" +
+                    "....T...\n" +
+                    "...TTT..\n", board.toString());
+            assertFalse(board.hasFalling());
+        }
     }
-*/
+
 }

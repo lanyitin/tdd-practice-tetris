@@ -8,10 +8,11 @@ import net.orfjackal.nestedjunit.NestedJUnit;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
+import tetris.impl.Piece;
+
 /**
  * @author Esko Luontola
  */
-@Ignore("contains no test") // TODO: uncomment me when you start doing these tests
 @RunWith(NestedJUnit.class)
 public class RotatingPiecesOfBlocksTest extends Assert {
 
@@ -20,7 +21,7 @@ public class RotatingPiecesOfBlocksTest extends Assert {
     // - See README for motivation
     // - Next step: RotatingTetrominoesTest
 
-/*
+
     private Piece piece;
 
 
@@ -29,38 +30,38 @@ public class RotatingPiecesOfBlocksTest extends Assert {
         @Before
         public void createPiece() {
             piece = new Piece("" +
-                    ".X.\n" +
-                    ".X.\n" +
-                    "...\n");
+                    ".X." +
+                    ".X." +
+                    "...");
         }
 
         @Test
         public void consists_of_many_blocks() {
             assertEquals("" +
-                    ".X.\n" +
-                    ".X.\n" +
-                    "...\n", piece.toString());
+                    ".X." +
+                    ".X." +
+                    "...", piece.toString());
         }
 
 //        @Test
 //        public void can_be_rotated_right() {
 //            piece = piece.rotateRight();
 //            assertEquals("" +
-//                    "...\n" +
-//                    ".XX\n" +
-//                    "...\n", piece.toString());
+//                    "..." +
+//                    ".XX" +
+//                    "...", piece.toString());
 //        }
 
 //        @Test
 //        public void can_be_rotated_left() {
 //            piece = piece.rotateLeft();
 //            assertEquals("" +
-//                    "...\n" +
-//                    "XX.\n" +
-//                    "...\n", piece.toString());
+//                    "..." +
+//                    "XX." +
+//                    "...", piece.toString());
 //        }
     }
-*/
+
 
 /*
     public class A_piece_of_5x5_blocks {
@@ -68,43 +69,43 @@ public class RotatingPiecesOfBlocksTest extends Assert {
         @Before
         public void createPiece() {
             piece = new Piece("" +
-                    "..XXX\n" +
-                    "..XX.\n" +
-                    "..X..\n" +
-                    ".....\n" +
-                    ".....\n");
+                    "..XXX" +
+                    "..XX." +
+                    "..X.." +
+                    "....." +
+                    ".....");
         }
 
         @Test
         public void consists_of_many_blocks() {
             assertEquals("" +
-                    "..XXX\n" +
-                    "..XX.\n" +
-                    "..X..\n" +
-                    ".....\n" +
-                    ".....\n", piece.toString());
+                    "..XXX" +
+                    "..XX." +
+                    "..X.." +
+                    "....." +
+                    ".....", piece.toString());
         }
 
 //        @Test
 //        public void can_be_rotated_right() {
 //            piece = piece.rotateRight();
 //            assertEquals("" +
-//                    ".....\n" +
-//                    ".....\n" +
-//                    "..XXX\n" +
-//                    "...XX\n" +
-//                    "....X\n", piece.toString());
+//                    "....." +
+//                    "....." +
+//                    "..XXX" +
+//                    "...XX" +
+//                    "....X", piece.toString());
 //        }
 
 //        @Test
 //        public void can_be_rotated_left() {
 //            piece = piece.rotateLeft();
 //            assertEquals("" +
-//                    "X....\n" +
-//                    "XX...\n" +
-//                    "XXX..\n" +
-//                    ".....\n" +
-//                    ".....\n", piece.toString());
+//                    "X...." +
+//                    "XX..." +
+//                    "XXX.." +
+//                    "....." +
+//                    ".....", piece.toString());
 //        }
     }
 */
