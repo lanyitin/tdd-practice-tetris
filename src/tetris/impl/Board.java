@@ -130,4 +130,30 @@ public class Board {
         }
 	}
 
+	public void rotateRight() {
+		Piece tmpPiece = fallingBlock;
+		fallingBlock = fallingBlock.rotateRight();
+		
+		nextState = generateState();
+		
+        if (hasCollision()) {
+        	fallingBlock = tmpPiece;
+        } else {
+        	currentState = nextState;
+        }
+	}
+
+	public void rotateLeft() {
+		Piece tmpPiece = fallingBlock;
+		fallingBlock = fallingBlock.rotateLeft();
+		
+		nextState = generateState();
+		
+        if (hasCollision()) {
+        	fallingBlock = tmpPiece;
+        } else {
+        	currentState = nextState;
+        }	
+	}
+
 }
