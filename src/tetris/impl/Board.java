@@ -66,23 +66,14 @@ public class Board {
 	}
 
 	public void tick() {
-		blockY++;
-        nextState = generateState();
-        
-        if (hasCollision()) {
-        	baseState = currentState;
-        	fallingBlock = null;
-        	blockX = blockY = 0;
-        } else {
-        	currentState = nextState;
-        }
+		moveDown();
 	}
 
 	private ArrayList<Character> generateState() {
 		ArrayList<Character> newState = (ArrayList<Character>) baseState.clone();
 		for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
-            	if (hasFalling() && col >= blockX && col <= blockX + (fallingBlock.getWidth() - 1) && row >= blockY && row <= blockY + (fallingBlock.getHeight() - 1)) {
+            	if (hasFalling() && col >= blockX && col <= blockX + (fallingBlock.getWidth() - 1) && row >= blockY && row <= blockY + (fallingBlock.getHeight() - 1) && getCharFromFallingBlock(row, col) != '.') {
             		newState.set(convertLocationToIndex(row, col), getCharFromFallingBlock(row, col));
             	}
             }
@@ -105,4 +96,38 @@ public class Board {
 		
 		return nextStateDotNumber > currentStateDotNumber;
 	}
+
+	public void moveLeft() {
+		blockX--;
+        nextState = generateState();
+        
+        if (hasCollision()) {
+        	blockX++;
+        } else {
+        	currentState = nextState;
+        }
+	}
+	public void moveDown() {
+		blockY++;
+        nextState = generateState();
+        
+        if (hasCollision()) {
+        	baseState = currentState;
+        	fallingBlock = null;
+        	blockX = blockY = 0;
+        } else {
+        	currentState = nextState;
+        }
+	}
+	public void moveRight() {
+		blockX++;
+        nextState = generateState();
+        
+        if (hasCollision()) {
+        	blockX--;
+        } else {
+        	currentState = nextState;
+        }
+	}
+
 }

@@ -7,7 +7,6 @@ public class Piece{
 	
 	public Piece(String inputString) {	
 		String[] lines = inputString.split("\n");
-		String data = new String();
 		height = lines.length;
 		
 		width = lines[0].length();
@@ -28,11 +27,36 @@ public class Piece{
 	
 	@Override
 	public String toString() {
-		String data = new String();
-		height = 0;
-		for(int i = 0; i < string.length; i++) {
-			data += string[i];
-		}	
-		return data;
+		String string = new String();
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				string += this.string[row * width + col];
+			}
+			string += "\n";
+		}
+		
+		return string;
+	}
+
+	public Piece rotateRight() {
+		String newData = "";
+		for (int col = 0; col < width; col++) {
+			for (int row = height - 1; row >= 0; row--) {
+				newData += this.string[row * width + col];
+			}
+			newData += "\n";
+		}
+		return new Piece(newData);
+	}
+
+	public Piece rotateLeft() {
+		String newData = "";
+		for (int col = width - 1; col >= 0; col--) {
+			for (int row = 0; row < height; row++) {
+				newData += this.string[row * width + col];
+			}
+			newData += "\n";
+		}
+		return new Piece(newData);
 	}
 }

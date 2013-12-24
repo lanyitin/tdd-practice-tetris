@@ -8,7 +8,6 @@ import net.orfjackal.nestedjunit.NestedJUnit;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
-@Ignore("contains no test")
 @RunWith(NestedJUnit.class)
 public class RotatingAFallingPieceTest extends Assert {
 
