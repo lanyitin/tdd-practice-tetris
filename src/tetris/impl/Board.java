@@ -41,8 +41,8 @@ public class Board {
 
 	public String toString() {
         String s = "";
-        for (int row = 0; row < getRows(); row++) {
-            for (int col = 0; col < getColumns(); col++) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
             	s += currentState.get(convertLocationToIndex(row, col));
             }
             s += "\n";
@@ -119,17 +119,25 @@ public class Board {
 
 	public void moveLeft() {
 		blockX--;
-        nextState = generateState();
+        generateNextState();
         
         if (hasCollision()) {
         	blockX++;
         } else {
-        	currentState = nextState;
+        	moveToNextState();
         }
+	}
+
+	private void moveToNextState() {
+		currentState = nextState;
+	}
+
+	private void generateNextState() {
+		nextState = generateState();
 	}
 	public void moveDown() {
 		blockY++;
-        nextState = generateState();
+        generateNextState();
         
         if (hasCollision()) {
         	baseState = currentState;
@@ -137,7 +145,7 @@ public class Board {
         	blockX = blockY = 0;
         	cleanLines();
         } else {
-        	currentState = nextState;
+        	moveToNextState();
         }
 	}
 	private void cleanLines() {
@@ -168,12 +176,12 @@ public class Board {
 
 	public void moveRight() {
 		blockX++;
-        nextState = generateState();
+        generateNextState();
         
         if (hasCollision()) {
         	blockX--;
         } else {
-        	currentState = nextState;
+        	moveToNextState();
         }
 	}
 
@@ -184,12 +192,12 @@ public class Board {
 		Piece tmpPiece = fallingBlock;
 		fallingBlock = fallingBlock.rotateRight();
 		
-		nextState = generateState();
+		generateNextState();
 		
         if (hasCollision()) {
         	fallingBlock = tmpPiece;
         } else {
-        	currentState = nextState;
+        	moveToNextState();
         }
 	}
 
@@ -200,12 +208,12 @@ public class Board {
 		Piece tmpPiece = fallingBlock;
 		fallingBlock = fallingBlock.rotateLeft();
 		
-		nextState = generateState();
+		generateNextState();
 		
         if (hasCollision()) {
         	fallingBlock = tmpPiece;
         } else {
-        	currentState = nextState;
+        	moveToNextState();
         }	
 		
 	}

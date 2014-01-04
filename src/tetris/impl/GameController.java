@@ -26,33 +26,16 @@ public class GameController extends JFrame {
 		this.add(panel);
 		this.setSize(width, height);
 
-		board = new Board(8, 6);
+		board = new Board(14, 7);
 		
 		timer = new Timer();
 		timer.schedule(new TimerTask(){
 
 			@Override
 			public void run() {
-				System.out.println(board.toString());
 				while (!board.hasFalling()) {
-					int randomNumber = (int) (Math.random() * 4);
-						switch(randomNumber) {
-						case 0:
-							board.drop(Tetromino.H_SHAPE);
-							break;
-						case 1:
-							board.drop(Tetromino.I_SHAPE);
-							break;
-						case 2:
-							board.drop(Tetromino.O_SHAPE);
-							break;
-						case 3:
-							board.drop(Tetromino.Z_SHAPE);
-							break;
-						default:
-							board.drop(Tetromino.T_SHAPE);
-							break;
-					}
+					int randomNumber = (int) (Math.random() * Tetromino.Tetrominos.length);
+					board.drop(Tetromino.Tetrominos[randomNumber]);
 				}
 				board.tick();
 			}}, 0, 1000);
@@ -93,6 +76,9 @@ public class GameController extends JFrame {
 									break;
 								case 'Z':
 									doubleBufferGraphics.setColor(Color.RED);
+									break;
+								case 'L':
+									doubleBufferGraphics.setColor(Color.LIGHT_GRAY);
 									break;
 								default:
 									doubleBufferGraphics.setColor(Color.BLUE);
