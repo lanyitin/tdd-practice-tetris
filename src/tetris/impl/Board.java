@@ -30,7 +30,15 @@ public class Board {
         currentState = (ArrayList<Character>) baseState.clone();
     }
 
-    public String toString() {
+    public int getRows() {
+		return rows;
+	}
+
+	public int getColumns() {
+		return columns;
+	}
+
+	public String toString() {
         String s = "";
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
