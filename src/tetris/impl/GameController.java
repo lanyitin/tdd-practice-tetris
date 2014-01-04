@@ -13,12 +13,13 @@ import java.util.TimerTask;
 
 import javax.swing.JFrame;
 
-public class GameController extends JFrame {
+public class GameController extends JFrame implements BoardEventListener {
 
 	private static final long serialVersionUID = -5592605328768740246L;
 	private GameLoop gameLoop;
 	private GamePanel panel;
 	private Board board;
+	private ScoreCounter counter;
 	private Timer timer;
 
 	public GameController(final int width, final int height) throws HeadlessException {
@@ -29,6 +30,7 @@ public class GameController extends JFrame {
 		this.setSize(width, height);
 
 		board = new Board(14, 7);
+		counter = new ScoreCounter();
 		
 		timer = new Timer();
 		timer.schedule(new TimerTask(){
@@ -43,6 +45,7 @@ public class GameController extends JFrame {
 						board.tick();
 					}
 				} catch (CantDropTetrominoException e) {
+					e.printStackTrace();
 					GameController.this.gameLoop.stop();
 					GameController.this.timer.cancel();
 				}
@@ -96,7 +99,9 @@ public class GameController extends JFrame {
 					}
 				}
 
-				doubleBufferGraphics.setColor(Color.BLACK);
+				doubleBufferGraphics.setColor(Color.MAGENTA);
+				char[] scoreChar = Integer.toString(counter.getScore()).toCharArray();
+				doubleBufferGraphics.drawChars(scoreChar, 0, scoreChar.length, (board.getColumns() + 1) * 20, 20);
 			}
 
 			@Override
@@ -158,6 +163,32 @@ public class GameController extends JFrame {
 	public static void main(String[] args) {
 		GameController controller = new GameController(600, 800);
 		controller.setVisible(true);
+	}
+
+	@Override
+	public void onDrop(Piece tShape) {}
+
+	@Override
+	public void onTick() {}
+
+	@Override
+	public void onMoveDown() {}
+
+	@Override
+	public void onMoveRight() {}
+
+	@Override
+	public void onMoveLeft() {}
+
+	@Override
+	public void onRotateRight() {}
+
+	@Override
+	public void onRotateLeft() {}
+
+	@Override
+	public void onClean(int clearedLines) {
+		counter.receiveNumberOfClearedLines(clearedLines);
 	}
 
 }

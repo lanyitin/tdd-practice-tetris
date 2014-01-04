@@ -14,7 +14,7 @@ public class Board {
 	private int blockY;
 	private BoardEventListener listener;
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public Board(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
@@ -103,6 +103,13 @@ public class Board {
 		}
 	}
 	
+	public void moveDown() {
+		fallingTetromino();
+		if (listener != null) {
+			listener.onMoveDown();
+		}
+	}
+	
 	public void rotateRight() {
 		switchTetromino(fallingBlock.rotateRight());
         if (listener != null) {
@@ -116,7 +123,11 @@ public class Board {
 			listener.onRotateLeft();
 		}
 	}
-
+	
+    public void setListener(BoardEventListener listener) {
+		this.listener = listener;
+	}
+    
 	private void switchTetromino(Piece piece) {
 		if (fallingBlock == null) {
 			return;
@@ -131,13 +142,6 @@ public class Board {
         } else {
         	moveToNextState();
         }
-	}
-	
-	public void moveDown() {
-		fallingTetromino();
-		if (listener != null) {
-			listener.onMoveDown();
-		}
 	}
 
 	private void shiftTetromino(int offset) {
@@ -166,7 +170,7 @@ public class Board {
         	baseState = currentState;
         	fallingBlock = null;
         	blockX = blockY = 0;
-        	cleanLines();
+        	cleanLinesIfNeed();
         } else {
         	moveToNextState();
         }
@@ -187,7 +191,6 @@ public class Board {
 
 	private boolean hasCollision() {
 		int currentStateDotNumber = 0, nextStateDotNumber = 0;
-
 		for (int i = 0; i < currentState.size(); i++) {
 			if (currentState.get(i) == '.' || nextState.get(i) == '.') {
 				if (currentState.get(i) == '.') {
@@ -198,6 +201,7 @@ public class Board {
 				}			
 			} else {
 				if (currentState.get(i) != nextState.get(i)) {
+					System.out.println(currentState.get(i) + ":" + nextState.get(i) + ":" + Integer.toString(i));
 					return true;
 				}
 			}
@@ -215,7 +219,7 @@ public class Board {
 	}
 	
 	@SuppressWarnings({ "unchecked", "serial" })
-	private void cleanLines() {
+	private void cleanLinesIfNeed() {
 		ArrayList<Character> tmpState = (ArrayList<Character>) baseState.clone();
 		int clearedLines = 0;
 		for (int row = 0; row < getRows(); row++) {
@@ -232,12 +236,17 @@ public class Board {
 				clearedLines++;
 			}
 		}
-		tmpState.removeAll(new ArrayList<Character>(){{add('*');}});
-		if (tmpState.size() < baseState.size()) {
-			for (int i = 0; i < clearedLines * getColumns(); i++) {
-				tmpState.add(0, '.');
+		if (clearedLines > 0) {
+			tmpState.removeAll(new ArrayList<Character>(){{add('*');}});
+			if (tmpState.size() < baseState.size()) {
+				for (int i = 0; i < clearedLines * getColumns(); i++) {
+					tmpState.add(0, '.');
+				}
+				baseState = (ArrayList<Character>) tmpState.clone();
 			}
-			baseState = (ArrayList<Character>) tmpState.clone();
+		}
+        if (listener != null) {
+			listener.onClean(clearedLines);
 		}
 	}
 	
