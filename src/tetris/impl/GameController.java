@@ -26,18 +26,35 @@ public class GameController extends JFrame {
 		this.add(panel);
 		this.setSize(width, height);
 
-		board = new Board(height / 100, width / 100);
+		board = new Board(8, 6);
 		
 		timer = new Timer();
 		timer.schedule(new TimerTask(){
 
 			@Override
 			public void run() {
-				if (!board.hasFalling()) {
-					board.drop(Tetromino.I_SHAPE);
-				} else {
-					board.tick();
+				System.out.println(board.toString());
+				while (!board.hasFalling()) {
+					int randomNumber = (int) (Math.random() * 4);
+						switch(randomNumber) {
+						case 0:
+							board.drop(Tetromino.H_SHAPE);
+							break;
+						case 1:
+							board.drop(Tetromino.I_SHAPE);
+							break;
+						case 2:
+							board.drop(Tetromino.O_SHAPE);
+							break;
+						case 3:
+							board.drop(Tetromino.Z_SHAPE);
+							break;
+						default:
+							board.drop(Tetromino.T_SHAPE);
+							break;
+					}
 				}
+				board.tick();
 			}}, 0, 1000);
 
 		gameLoop = new GameLoop() {
@@ -61,12 +78,26 @@ public class GameController extends JFrame {
 				}
 				doubleBufferGraphics.setColor(Color.BLACK);
 				doubleBufferGraphics.fillRect(0, 0, width, height);
+				doubleBufferGraphics.setColor(Color.GRAY);
+				doubleBufferGraphics.fillRect(0, 0, board.getColumns() * 20, board.getRows() * 20);
 				for (int row = 0; row < board.getRows(); row++) {
 					for (int col = 0; col < board.getColumns(); col++) {
 						char c = board.toString().replace("\n", "").charAt(row * board.getColumns() + col);
 						if (c != '.') {
-							doubleBufferGraphics.setColor(Color.BLUE);
-							doubleBufferGraphics.fillRect(col * 100,  row * 100, 100, 100);
+							switch(c) {
+								case 'T':
+									doubleBufferGraphics.setColor(Color.YELLOW);
+									break;
+								case 'O':
+									doubleBufferGraphics.setColor(Color.ORANGE);
+									break;
+								case 'Z':
+									doubleBufferGraphics.setColor(Color.RED);
+									break;
+								default:
+									doubleBufferGraphics.setColor(Color.BLUE);
+							}
+							doubleBufferGraphics.fillRect(col * 20,  row * 20, 20, 20);
 						}
 					}
 				}
@@ -93,6 +124,7 @@ public class GameController extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
 				gameLoop.stop();
+				System.exit(0);
 			}
 
 			@Override
@@ -116,6 +148,8 @@ public class GameController extends JFrame {
 					board.moveLeft();
 				} else if (arg0.getKeyCode() == KeyEvent.VK_RIGHT) {
 					board.moveRight();
+				} else if (arg0.getKeyCode() == KeyEvent.VK_UP) {
+					board.rotateLeft();
 				}
 			}
 
@@ -128,7 +162,7 @@ public class GameController extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		GameController controller = new GameController(800, 600);
+		GameController controller = new GameController(600, 800);
 		controller.setVisible(true);
 	}
 

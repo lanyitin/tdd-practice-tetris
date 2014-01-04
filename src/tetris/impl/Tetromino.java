@@ -83,4 +83,5 @@ public class Tetromino extends Piece{
 	public static final Tetromino I_SHAPE = new I_Tetromino();
 	public static final Tetromino H_SHAPE = new H_Tetromino();
 	public static final Tetromino O_SHAPE = new O_Tetromino();
+	public static final Tetromino Z_SHAPE = new Tetromino("ZZ.\n.ZZ\n...");
 }

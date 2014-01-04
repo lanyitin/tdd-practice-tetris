@@ -13,7 +13,8 @@ public class Board {
 	private int blockX;
 	private int blockY;
 
-    public Board(int rows, int columns) {
+    @SuppressWarnings("unchecked")
+	public Board(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
         this.fallingBlock = null;
@@ -40,8 +41,8 @@ public class Board {
 
 	public String toString() {
         String s = "";
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getColumns(); col++) {
             	s += currentState.get(convertLocationToIndex(row, col));
             }
             s += "\n";
@@ -66,6 +67,12 @@ public class Board {
 		if (!hasFalling()) {
 			blockX = columns/2 - tShape.getWidth() / 2;
 			this.fallingBlock = tShape;
+			String[] blockLines = this.fallingBlock.toString().split("\n");
+			for (int i = 0; i < blockLines.length; i++) {
+				if (blockLines[i].replace(".", "").length() == 0) {
+					blockY--;
+				}
+			}
 			currentState = generateState();
 		} else {
 			throw new IllegalStateException("already falling");
@@ -91,17 +98,22 @@ public class Board {
 
 	private boolean hasCollision() {
 		int currentStateDotNumber = 0, nextStateDotNumber = 0;
-		for (char c : nextState) {
-			if (c == '.') {
-				nextStateDotNumber++;
+
+		for (int i = 0; i < currentState.size(); i++) {
+			if (currentState.get(i) == '.' || nextState.get(i) == '.') {
+				if (currentState.get(i) == '.') {
+					currentStateDotNumber++;
+				}
+				if (nextState.get(i) == '.') {
+					nextStateDotNumber++;
+				}			
+			} else {
+				if (currentState.get(i) != nextState.get(i)) {
+					return true;
+				}
 			}
+
 		}
-		for (char c : currentState) {
-			if (c == '.') {
-				currentStateDotNumber++;
-			}
-		}
-		
 		return nextStateDotNumber > currentStateDotNumber;
 	}
 
@@ -123,10 +135,37 @@ public class Board {
         	baseState = currentState;
         	fallingBlock = null;
         	blockX = blockY = 0;
+        	cleanLines();
         } else {
         	currentState = nextState;
         }
 	}
+	private void cleanLines() {
+		ArrayList<Character> tmpState = (ArrayList<Character>) baseState.clone();
+		int clearedLines = 0;
+		for (int row = 0; row < getRows(); row++) {
+			int nonDotCount = 0;
+			for (int col = 0; col < getColumns(); col++) {
+				if (baseState.get(convertLocationToIndex(row, col)) != '.') {
+					nonDotCount++;
+				}
+			}
+			if (nonDotCount == getColumns()) {
+				for (int col = 0; col < getColumns(); col++) {
+					tmpState.set(row * getColumns() + col, '*');
+				}
+				clearedLines++;
+			}
+		}
+		tmpState.removeAll(new ArrayList<Character>(){{add('*');}});
+		if (tmpState.size() < baseState.size()) {
+			for (int i = 0; i < clearedLines * getColumns(); i++) {
+				tmpState.add(0, '.');
+			}
+			baseState = (ArrayList<Character>) tmpState.clone();
+		}
+	}
+
 	public void moveRight() {
 		blockX++;
         nextState = generateState();
@@ -139,6 +178,9 @@ public class Board {
 	}
 
 	public void rotateRight() {
+		if (fallingBlock == null) {
+			return;
+		}
 		Piece tmpPiece = fallingBlock;
 		fallingBlock = fallingBlock.rotateRight();
 		
@@ -152,6 +194,9 @@ public class Board {
 	}
 
 	public void rotateLeft() {
+		if (fallingBlock == null) {
+			return;
+		}
 		Piece tmpPiece = fallingBlock;
 		fallingBlock = fallingBlock.rotateLeft();
 		
@@ -162,6 +207,7 @@ public class Board {
         } else {
         	currentState = nextState;
         }	
+		
 	}
 
 }

@@ -31,8 +31,13 @@ public abstract class GameLoop implements Runnable{
 
 	public void stop() {
 		System.out.println("Game should stop");
-		System.out.println(Thread.currentThread().toString());
 		running.set(false);
+		try {
+			animateThread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
