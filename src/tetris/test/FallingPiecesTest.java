@@ -9,6 +9,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import tetris.impl.Board;
+import tetris.impl.CantDropTetrominoException;
 import tetris.impl.Tetromino;
 
 /**
@@ -29,7 +30,7 @@ public class FallingPiecesTest extends Assert {
     public class When_a_piece_is_dropped {
 
         @Before
-        public void dropPiece() {
+        public void dropPiece() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
         }
 
@@ -49,7 +50,7 @@ public class FallingPiecesTest extends Assert {
     public class When_a_piece_reaches_the_bottom {
 
         @Before
-        public void fallToLastRow() {
+        public void fallToLastRow() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
             board.tick();
             board.tick();
@@ -87,7 +88,7 @@ public class FallingPiecesTest extends Assert {
     public class When_a_piece_lands_on_another_piece {
 
         @Before
-        public void landOnAnother() {
+        public void landOnAnother() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
             board.tick();
             board.tick();

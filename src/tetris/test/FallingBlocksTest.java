@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 
 import tetris.impl.Block;
 import tetris.impl.Board;
+import tetris.impl.CantDropTetrominoException;
 
 /**
  * @author Esko Luontola
@@ -44,7 +45,7 @@ public class FallingBlocksTest extends Assert {
     public class When_a_block_is_dropped {
 
         @Before
-        public void dropBlock() {
+        public void dropBlock() throws CantDropTetrominoException {
             board.drop(new Block('X'));
         }
 
@@ -71,7 +72,7 @@ public class FallingBlocksTest extends Assert {
         }
 
         @Test
-        public void at_most_one_block_may_be_falling_at_a_time() {
+        public void at_most_one_block_may_be_falling_at_a_time() throws CantDropTetrominoException {
             try {
                 board.drop(new Block('Y'));
                 fail();
@@ -90,7 +91,7 @@ public class FallingBlocksTest extends Assert {
     public class When_a_block_reaches_the_bottom {
 
         @Before
-        public void fallToLastRow() {
+        public void fallToLastRow() throws CantDropTetrominoException {
             board.drop(new Block('X'));
             board.tick();
             board.tick();
@@ -119,7 +120,7 @@ public class FallingBlocksTest extends Assert {
     public class When_a_block_lands_on_another_block {
 
         @Before
-        public void landOnAnother() {
+        public void landOnAnother() throws CantDropTetrominoException {
             board.drop(new Block('X'));
             board.tick();
             board.tick();

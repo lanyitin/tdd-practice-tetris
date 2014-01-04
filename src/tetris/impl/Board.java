@@ -12,6 +12,7 @@ public class Board {
 	private Piece fallingBlock;
 	private int blockX;
 	private int blockY;
+	private BoardEventListener listener;
 
     @SuppressWarnings("unchecked")
 	public Board(int rows, int columns) {
@@ -50,40 +51,128 @@ public class Board {
         return s;
     }
 
-	private char getCharFromFallingBlock(int row, int col) {
-		int index = (row - blockY) * (fallingBlock.getWidth()) + col - blockX;
-		return fallingBlock.getChars()[index];
-	}
-
-	private int convertLocationToIndex(int row, int col) {
-		return row * columns + col;
-	}
-
 	public boolean hasFalling() {
 		return this.fallingBlock != null;
 	}
 
-	public void drop(Piece tShape) {
-		if (!hasFalling()) {
-			blockX = columns/2 - tShape.getWidth() / 2;
-			this.fallingBlock = tShape;
-			String[] blockLines = this.fallingBlock.toString().split("\n");
-			for (int i = 0; i < blockLines.length; i++) {
-				if (blockLines[i].replace(".", "").length() == 0) {
-					blockY--;
-				}
-			}
-			currentState = generateState();
-		} else {
+	public void drop(Piece tShape) throws CantDropTetrominoException{
+		if (hasFalling()) {
 			throw new IllegalStateException("already falling");
+		}
+		blockX = columns/2 - tShape.getWidth() / 2;
+		this.fallingBlock = tShape;
+		int currentIndex = 0;
+		char[] shapeChars = tShape.getChars();
+		while (currentIndex < shapeChars.length) {
+			if (shapeChars[currentIndex] != '.') {
+				blockY -= (currentIndex / columns);
+				break; 
+			}
+			currentIndex++;
+		}
+		
+		nextState = generateState();
+		
+		if (hasCollision()) {
+			throw new CantDropTetrominoException();
+		}
+		this.moveToNextState();
+		if (listener != null) {
+			listener.onDrop(tShape);
 		}
 		
 	}
 
 	public void tick() {
-		moveDown();
+		fallingTetromino();
+		if (listener != null) {
+			listener.onTick();
+		}
+	}
+	public void moveLeft() {
+		shiftTetromino(-1);
+		if (listener != null) {
+			listener.onMoveLeft();
+		}
 	}
 
+	public void moveRight() {
+		shiftTetromino(1);
+		if (listener != null) {
+			listener.onMoveRight();
+		}
+	}
+	
+	public void rotateRight() {
+		switchTetromino(fallingBlock.rotateRight());
+        if (listener != null) {
+			listener.onRotateRight();
+		}
+	}
+
+	public void rotateLeft() {
+		switchTetromino(fallingBlock.rotateLeft());
+        if (listener != null) {
+			listener.onRotateLeft();
+		}
+	}
+
+	private void switchTetromino(Piece piece) {
+		if (fallingBlock == null) {
+			return;
+		}
+		Piece tmpPiece = fallingBlock;
+		fallingBlock = piece;
+		
+		generateNextState();
+		
+        if (hasCollision()) {
+        	fallingBlock = tmpPiece;
+        } else {
+        	moveToNextState();
+        }
+	}
+	
+	public void moveDown() {
+		fallingTetromino();
+		if (listener != null) {
+			listener.onMoveDown();
+		}
+	}
+
+	private void shiftTetromino(int offset) {
+		int originX = blockX;
+		if (!hasFalling()) {
+			return;
+		}
+		blockX+= offset;
+        generateNextState();
+        
+        if (hasCollision()) {
+        	blockX = originX;
+        } else {
+        	moveToNextState();
+        }
+	}
+	
+	private void fallingTetromino() {
+		if (!hasFalling()) {
+			return;
+		}
+		blockY++;
+        generateNextState();
+        
+        if (hasCollision()) {
+        	baseState = currentState;
+        	fallingBlock = null;
+        	blockX = blockY = 0;
+        	cleanLines();
+        } else {
+        	moveToNextState();
+        }
+	}
+
+	@SuppressWarnings("unchecked")
 	private ArrayList<Character> generateState() {
 		ArrayList<Character> newState = (ArrayList<Character>) baseState.clone();
 		for (int row = 0; row < rows; row++) {
@@ -117,17 +206,6 @@ public class Board {
 		return nextStateDotNumber > currentStateDotNumber;
 	}
 
-	public void moveLeft() {
-		blockX--;
-        generateNextState();
-        
-        if (hasCollision()) {
-        	blockX++;
-        } else {
-        	moveToNextState();
-        }
-	}
-
 	private void moveToNextState() {
 		currentState = nextState;
 	}
@@ -135,19 +213,8 @@ public class Board {
 	private void generateNextState() {
 		nextState = generateState();
 	}
-	public void moveDown() {
-		blockY++;
-        generateNextState();
-        
-        if (hasCollision()) {
-        	baseState = currentState;
-        	fallingBlock = null;
-        	blockX = blockY = 0;
-        	cleanLines();
-        } else {
-        	moveToNextState();
-        }
-	}
+	
+	@SuppressWarnings({ "unchecked", "serial" })
 	private void cleanLines() {
 		ArrayList<Character> tmpState = (ArrayList<Character>) baseState.clone();
 		int clearedLines = 0;
@@ -173,49 +240,15 @@ public class Board {
 			baseState = (ArrayList<Character>) tmpState.clone();
 		}
 	}
+	
 
-	public void moveRight() {
-		blockX++;
-        generateNextState();
-        
-        if (hasCollision()) {
-        	blockX--;
-        } else {
-        	moveToNextState();
-        }
+	private char getCharFromFallingBlock(int row, int col) {
+		int index = (row - blockY) * (fallingBlock.getWidth()) + col - blockX;
+		return fallingBlock.getChars()[index];
 	}
 
-	public void rotateRight() {
-		if (fallingBlock == null) {
-			return;
-		}
-		Piece tmpPiece = fallingBlock;
-		fallingBlock = fallingBlock.rotateRight();
-		
-		generateNextState();
-		
-        if (hasCollision()) {
-        	fallingBlock = tmpPiece;
-        } else {
-        	moveToNextState();
-        }
-	}
-
-	public void rotateLeft() {
-		if (fallingBlock == null) {
-			return;
-		}
-		Piece tmpPiece = fallingBlock;
-		fallingBlock = fallingBlock.rotateLeft();
-		
-		generateNextState();
-		
-        if (hasCollision()) {
-        	fallingBlock = tmpPiece;
-        } else {
-        	moveToNextState();
-        }	
-		
+	private int convertLocationToIndex(int row, int col) {
+		return row * columns + col;
 	}
 
 }

@@ -9,6 +9,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import tetris.impl.Board;
+import tetris.impl.CantDropTetrominoException;
 import tetris.impl.Tetromino;
 
 @RunWith(NestedJUnit.class)
@@ -43,7 +44,7 @@ public class RotatingAFallingPieceTest extends Assert {
     // TODO: a falling piece can be rotated clockwise
 	public class a_falling_piece_can_be_rotated_clockwise {
     	@Before
-        public void dropTetromino() {
+        public void dropTetromino() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
         }
 
@@ -92,7 +93,7 @@ public class RotatingAFallingPieceTest extends Assert {
     // TODO: a falling piece can be rotated counter-clockwise
 	public class a_falling_piece_can_be_rotated_counter_clockwise {
     	@Before
-        public void dropTetromino() {
+        public void dropTetromino() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
         }
 
@@ -141,7 +142,7 @@ public class RotatingAFallingPieceTest extends Assert {
     // TODO: it can not be rotated when there is no room to rotate (left wall, right wall, other pieces...)
 	public class it_can_not_be_rotated_when_there_is_no_room_to_rotate {
     	@Before
-        public void dropTetromino() {
+        public void dropTetromino() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
             board.moveLeft();
             board.moveLeft();
@@ -172,7 +173,7 @@ public class RotatingAFallingPieceTest extends Assert {
                     "TTT...\n", board.toString());
         }
     	@Test
-    	public void dropAnotherPiece() {
+    	public void dropAnotherPiece() throws CantDropTetrominoException {
     		board.drop(Tetromino.T_SHAPE);
     		assertEquals("" +
     				"...T..\n" +

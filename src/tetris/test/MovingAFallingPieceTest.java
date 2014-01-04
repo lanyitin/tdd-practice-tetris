@@ -7,9 +7,8 @@ package tetris.test;
 import net.orfjackal.nestedjunit.NestedJUnit;
 import org.junit.*;
 import org.junit.runner.RunWith;
-
-import tetris.impl.Block;
 import tetris.impl.Board;
+import tetris.impl.CantDropTetrominoException;
 import tetris.impl.Tetromino;
 
 @RunWith(NestedJUnit.class)
@@ -43,7 +42,7 @@ public class MovingAFallingPieceTest extends Assert {
     }
     public class Moving_left_a_falling_piece {
     	@Before
-        public void dropTetromino() {
+        public void dropTetromino() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
         }
 
@@ -95,7 +94,7 @@ public class MovingAFallingPieceTest extends Assert {
     }
     public class Moving_right_a_falling_piece {
     	@Before
-        public void dropTetromino() {
+        public void dropTetromino() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
         }
 
@@ -147,7 +146,7 @@ public class MovingAFallingPieceTest extends Assert {
     }
     public class Moving_down_a_falling_piece {
     	@Before
-        public void dropTetromino() {
+        public void dropTetromino() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
         }
 
@@ -199,7 +198,7 @@ public class MovingAFallingPieceTest extends Assert {
     }
     public class it_will_not_move_left_over_over_the_board {
     	@Before
-        public void dropTetromino() {
+        public void dropTetromino() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
         }
 
@@ -254,7 +253,7 @@ public class MovingAFallingPieceTest extends Assert {
     }
     public class it_will_not_move_right_over_over_the_board {
     	@Before
-        public void dropTetromino() {
+        public void dropTetromino() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
         }
 
@@ -309,7 +308,7 @@ public class MovingAFallingPieceTest extends Assert {
     }
     public class it_will_not_move_donw_over_over_the_board_and_stop_falling {
     	@Before
-        public void dropTetromino() {
+        public void dropTetromino() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
         }
 
@@ -369,7 +368,7 @@ public class MovingAFallingPieceTest extends Assert {
     }
     public class it_can_not_be_moved_left_if_another_piece_is_in_the_way {
     	@Before
-        public void dropTetromino() {
+        public void dropTetromino() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
             board.moveLeft();
             board.moveLeft();
@@ -400,7 +399,7 @@ public class MovingAFallingPieceTest extends Assert {
                     "TTT...\n", board.toString());
         }
     	@Test
-    	public void dropAnotherPiece() {
+    	public void dropAnotherPiece() throws CantDropTetrominoException {
     		board.drop(Tetromino.T_SHAPE);
     		assertEquals("" +
     				"...T..\n" +
@@ -442,7 +441,7 @@ public class MovingAFallingPieceTest extends Assert {
     }
     public class it_can_not_be_moved_right_if_another_piece_is_in_the_way {
     	@Before
-        public void dropTetromino() {
+        public void dropTetromino() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
             board.moveRight();
             board.moveRight();
@@ -474,7 +473,7 @@ public class MovingAFallingPieceTest extends Assert {
                     "...TTT\n", board.toString());
         }
     	@Test
-    	public void dropAnotherPiece() {
+    	public void dropAnotherPiece() throws CantDropTetrominoException {
     		board.drop(Tetromino.T_SHAPE);
     		assertEquals("" +
     				"...T..\n" +
@@ -517,7 +516,7 @@ public class MovingAFallingPieceTest extends Assert {
     }
     public class it_can_not_be_moved_down_if_another_piece_is_in_the_way_stop_falling {
     	@Before
-        public void dropTetromino() {
+        public void dropTetromino() throws CantDropTetrominoException {
             board.drop(Tetromino.T_SHAPE);
             assertEquals("" +
                     "...T..\n" +
@@ -546,7 +545,7 @@ public class MovingAFallingPieceTest extends Assert {
                     "..TTT.\n", board.toString());
         }
     	@Test
-    	public void dropAnotherPiece() {
+    	public void dropAnotherPiece() throws CantDropTetrominoException {
     		board.drop(Tetromino.T_SHAPE);
     		assertEquals("" +
     				"...T..\n" +

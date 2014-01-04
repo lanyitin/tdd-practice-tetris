@@ -14,6 +14,8 @@ import java.util.TimerTask;
 import javax.swing.JFrame;
 
 public class GameController extends JFrame {
+
+	private static final long serialVersionUID = -5592605328768740246L;
 	private GameLoop gameLoop;
 	private GamePanel panel;
 	private Board board;
@@ -33,11 +35,17 @@ public class GameController extends JFrame {
 
 			@Override
 			public void run() {
-				while (!board.hasFalling()) {
-					int randomNumber = (int) (Math.random() * Tetromino.Tetrominos.length);
-					board.drop(Tetromino.Tetrominos[randomNumber]);
+				try {
+					if (!board.hasFalling()) {
+						int randomNumber = (int) (Math.random() * Tetromino.Tetrominos.length);
+						board.drop(Tetromino.Tetrominos[randomNumber]);
+					} else {
+						board.tick();
+					}
+				} catch (CantDropTetrominoException e) {
+					GameController.this.gameLoop.stop();
+					GameController.this.timer.cancel();
 				}
-				board.tick();
 			}}, 0, 1000);
 
 		gameLoop = new GameLoop() {
