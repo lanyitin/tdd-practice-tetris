@@ -71,9 +71,11 @@ public class Board {
 			currentIndex++;
 		}
 		
-		nextState = generateState();
+		generateNextState();
 		
 		if (hasCollision()) {
+			System.out.println(currentState);
+			System.out.println(nextState);
 			throw new CantDropTetrominoException();
 		}
 		this.moveToNextState();
@@ -201,7 +203,7 @@ public class Board {
 				}			
 			} else {
 				if (currentState.get(i) != nextState.get(i)) {
-					System.out.println(currentState.get(i) + ":" + nextState.get(i) + ":" + Integer.toString(i));
+//					System.out.println(currentState.get(i) + ":" + nextState.get(i) + ":" + Integer.toString(i));
 					return true;
 				}
 			}
@@ -242,7 +244,7 @@ public class Board {
 				for (int i = 0; i < clearedLines * getColumns(); i++) {
 					tmpState.add(0, '.');
 				}
-				baseState = (ArrayList<Character>) tmpState.clone();
+				baseState = currentState = (ArrayList<Character>) tmpState.clone();
 			}
 		}
         if (listener != null) {

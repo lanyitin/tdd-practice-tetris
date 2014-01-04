@@ -16,8 +16,8 @@ public class ScoreCounter {
 			score += currentComboCount * 10;
 		} else {
 			currentComboCount = 0;
-			maxAccumulatedComboCount = Math.max(maxAccumulatedComboCount, currentComboCount);
 		}
+		maxAccumulatedComboCount = Math.max(maxAccumulatedComboCount, currentComboCount);
 	}
 	
 	public int getScore() {

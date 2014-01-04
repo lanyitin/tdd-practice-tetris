@@ -30,6 +30,7 @@ public class GameController extends JFrame implements BoardEventListener {
 		this.setSize(width, height);
 
 		board = new Board(14, 7);
+		board.setListener(this);
 		counter = new ScoreCounter();
 		
 		timer = new Timer();
@@ -100,8 +101,12 @@ public class GameController extends JFrame implements BoardEventListener {
 				}
 
 				doubleBufferGraphics.setColor(Color.MAGENTA);
-				char[] scoreChar = Integer.toString(counter.getScore()).toCharArray();
+				char[] scoreChar = ("Score: " + Integer.toString(counter.getScore())).toCharArray();
+				char[] comboChar = ("Combo: " + Integer.toString(counter.getCurrentComboCount())).toCharArray();
+				char[] maxComboChar = ("Max Combo: " + Integer.toString(counter.getMaxAccumulatedComboCount())).toCharArray();
 				doubleBufferGraphics.drawChars(scoreChar, 0, scoreChar.length, (board.getColumns() + 1) * 20, 20);
+				doubleBufferGraphics.drawChars(comboChar, 0, comboChar.length, (board.getColumns() + 1) * 20, 40);
+				doubleBufferGraphics.drawChars(maxComboChar, 0, maxComboChar.length, (board.getColumns() + 1) * 20, 60);
 			}
 
 			@Override
@@ -161,7 +166,7 @@ public class GameController extends JFrame implements BoardEventListener {
 	}
 
 	public static void main(String[] args) {
-		GameController controller = new GameController(600, 800);
+		GameController controller = new GameController(300, 400);
 		controller.setVisible(true);
 	}
 
