@@ -1,0 +1,149 @@
+Context Board
+inv: 0-fallingBlock.width  <= fallingBlock.x <= self.width – fallingBlock.width 
+	and 0– fallingBlock.height <= fallingBlock.y <= self.height – fallingBlock.height
+
+Context Board::Board(rows:Integer, colums:Integer)
+pre: self.hasRoomForNewTetromino()
+post: self.fallingBlock = NULL and 
+	self.rows = rows and self.colums = colums and
+	self.blockX = 0 and self.blockY = 0
+	
+Context Board::getRows()	
+post: result = self.rows	
+	
+Context Board::getColumns()	
+post: result = self.columns
+	
+Context Board::hasFalling()
+post: result = (self.fallingBlock <> NULL)
+
+Context Board::drop(tShape: Tetromino)
+pre: self.hasRoomForNewTetromino() and !self.hasFalling()
+post: self.fallingBlock = tShape
+
+Context Board::tick()
+pre: self.hasRoomForNewTetromino() and self.hasFalling()
+post: self.blockY = self.blockY@pre+1
+	if(self.hasCollision()){
+		self.fallingBlock = NULL and
+		self.blockX = 0 and self.blockY = 0 and
+		BoardString->iterate( c: String;
+		clearndLines : clearndLines = 0|
+		if(Sequence(c) = Sequence{'********'}) then
+			clearedLines = clearedLines+1
+		endif)
+		if(clearedLines >0 ){
+		BoardString = CleanBoardString
+		}
+	}
+
+Context Board::moveLeft()
+pre: self.hasFalling() and !self.hasCollision()
+post: fallingBlock.x = fallingBlock.x@pre – 1
+
+Context Board::moveRight()
+pre: self.hasFalling() and !self.hasCollision()
+post: fallingBlock.x = fallingBlock.x@pre + 1
+
+Context Board::moveDown()
+pre: self.hasFalling()
+post: self.blockY = self.blockY@pre+1
+	if(self.hasCollision()){
+		self.fallingBlock = NULL and
+		self.blockX = 0 and self.blockY = 0 and
+		BoardString->iterate( c: String;
+		clearndLines : clearndLines = 0|
+		if(Sequence(c) = Sequence{'********'}) then
+			clearedLines = clearedLines+1
+		endif)
+		if(clearedLines >0 ){
+		BoardString = CleanBoardString
+		}
+	}
+
+Context Board::rotateRight()
+pre: self.hasFalling() and !self.hasCollision()
+post: tetromino.retateRight()
+
+Context Board::rotateLeft()
+pre: self.hasFalling() and !self.hasCollision()
+post: tetromino.retateLeft()
+
+
+Context Tetromino
+inv: 0-self.width  <= self.x <= Board.width – self.width 
+	and 0– self.height <= self.y <= Board.height – self.height
+
+Context Tetromino::rotateRight()
+post: BoardString->indexOf(row) = BoardString->indexOf(col)
+
+Context Tetromino::rotateLeft()
+post: BoardString->indexOf(col) = BoardString->indexOf(row)
+
+
+Context GameController
+inv: Board.hasRoomForNewTetromino()
+
+Context GameController::run()
+post: if(!board.hasFalling()){
+		self.fallingBlock = Tetromino.Random()
+	} else {
+		 self.blockY = self.blockY@pre+1
+	if(self.hasCollision()){
+		self.fallingBlock = NULL and
+		self.blockX = 0 and self.blockY = 0 and
+		BoardString->iterate( c: String;
+		clearndLines : clearndLines = 0|
+		if(Sequence(c) = Sequence{'********'}) then
+			clearedLines = clearedLines+1
+		endif)
+		if(clearedLines >0 ){
+		BoardString = CleanBoardString
+		}
+	}
+	
+Context GameController::gameRender()
+post: if(c = 'T'){ doubleBufferGraphics.color = YELLOW
+	} else {
+		if(c = 'O'){ doubleBufferGraphics.color = ORANGE } 
+		else {
+			if(c = 'Z'){ doubleBufferGraphics.color = RED }
+			else{
+				if(c = 'L'){ doubleBufferGraphics.color = LIGHT_GRAY }
+			} else { doubleBufferGraphics.color = BLUE }
+		}
+	}
+
+Context GameController::KeyBoardListener(keyB : KeyListener)
+pre: hasKeyBoardEvent()
+post: if(keyB = KeyEvent.VK_DOWN){
+		self.blockY = self.blockY@pre+1
+			if(self.hasCollision()){
+				self.fallingBlock = NULL and
+				self.blockX = 0 and self.blockY = 0 and
+				BoardString->iterate( c: String;
+				clearndLines : clearndLines = 0|
+				if(Sequence(c) = Sequence{'********'}) then
+					clearedLines = clearedLines+1
+				endif)
+				if(clearedLines >0 ){
+				BoardString = CleanBoardString
+				}
+			}
+	} else{
+		if(keyB = KeyEvent.VK_LEFT) {
+			fallingBlock.x = fallingBlock.x@pre – 1
+		} else{
+			if(keyB = KeyEvent.VK_RIGHT) {
+				fallingBlock.x = fallingBlock.x@pre + 1
+			} else{
+				if(keyB = KeyEvent.VK_CONTROL){
+					tetromino.retateRight()
+				} else{
+					if(keyB = KeyEvent.VK_SHIFT){
+						tetromino.retateLeft()
+					}
+				}
+			}
+		}
+	}
