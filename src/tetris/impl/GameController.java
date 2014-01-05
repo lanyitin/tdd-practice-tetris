@@ -12,6 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class GameController extends JFrame implements BoardEventListener {
 
@@ -46,9 +47,9 @@ public class GameController extends JFrame implements BoardEventListener {
 						board.tick();
 					}
 				} catch (CantDropTetrominoException e) {
-					e.printStackTrace();
 					GameController.this.gameLoop.stop();
 					GameController.this.timer.cancel();
+					JOptionPane.showMessageDialog(GameController.this, "Game over!!");
 				}
 			}}, 0, 1000);
 

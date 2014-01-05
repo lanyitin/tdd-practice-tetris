@@ -74,8 +74,6 @@ public class Board {
 		generateNextState();
 		
 		if (hasCollision()) {
-			System.out.println(currentState);
-			System.out.println(nextState);
 			throw new CantDropTetrominoException();
 		}
 		this.moveToNextState();
@@ -203,7 +201,6 @@ public class Board {
 				}			
 			} else {
 				if (currentState.get(i) != nextState.get(i)) {
-//					System.out.println(currentState.get(i) + ":" + nextState.get(i) + ":" + Integer.toString(i));
 					return true;
 				}
 			}

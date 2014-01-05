@@ -30,7 +30,6 @@ public abstract class GameLoop implements Runnable{
 	}
 
 	public void stop() {
-		System.out.println("Game should stop");
 		running.set(false);
 		try {
 			animateThread.join();
@@ -82,15 +81,11 @@ public abstract class GameLoop implements Runnable{
 			int skips = 0;
 			while ((excess > period) && (skips < MAX_FRAME_SKIPS)) {
 				excess -= period;
-				//System.out.print("Excess:");
 				gameUpdate();
 				skips++;
 			}
 			framesSkipped = skips;
 		}
-		System.out.println("Loop Done");
-		System.out.println(Thread.currentThread().toString());
-		System.exit(0);
 	}
 
 	public GameLoop() {
