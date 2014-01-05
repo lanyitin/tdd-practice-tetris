@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,6 +23,7 @@ public class GameController extends JFrame implements BoardEventListener {
 	private Board board;
 	private ScoreCounter counter;
 	private Timer timer;
+	private Stack<Runnable> action_stack;
 
 	public GameController(final int width, final int height) throws HeadlessException {
 		super();
@@ -33,6 +35,8 @@ public class GameController extends JFrame implements BoardEventListener {
 		board = new Board(14, 7);
 		board.setListener(this);
 		counter = new ScoreCounter();
+		
+		action_stack = new Stack<Runnable>();
 		
 		timer = new Timer();
 		timer.schedule(new TimerTask(){
@@ -64,6 +68,9 @@ public class GameController extends JFrame implements BoardEventListener {
 
 			@Override
 			public void gameRender() {
+				if (GameController.this.hasAction()) {
+					GameController.this.popAction().run();
+				}
 				if (doubleBufferImage == null) {
 					doubleBufferImage = panel.createImage(width, height);
 				}
@@ -148,13 +155,45 @@ public class GameController extends JFrame implements BoardEventListener {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if (arg0.getKeyCode() == KeyEvent.VK_DOWN) {
-					board.moveDown();
+					action_stack.add(new Runnable() {
+						@Override
+						public void run() {
+							board.moveDown();
+						}
+					});
+					action_stack.setSize(1);
 				} else if (arg0.getKeyCode() == KeyEvent.VK_LEFT) {
-					board.moveLeft();
+					action_stack.add(new Runnable() {
+						@Override
+						public void run() {
+							board.moveLeft();
+						}
+					});
+					action_stack.setSize(1);
 				} else if (arg0.getKeyCode() == KeyEvent.VK_RIGHT) {
-					board.moveRight();
-				} else if (arg0.getKeyCode() == KeyEvent.VK_UP) {
-					board.rotateLeft();
+					action_stack.add(new Runnable() {
+						@Override
+						public void run() {
+							board.moveRight();
+						}
+					});
+					action_stack.setSize(1);
+				} else if (arg0.getKeyCode() == KeyEvent.VK_CONTROL) {
+					action_stack.add(new Runnable() {
+						@Override
+						public void run() {
+							board.rotateRight();
+						}
+					});
+					action_stack.setSize(1);
+				} else if (arg0.getKeyCode() == KeyEvent.VK_SHIFT) {
+					action_stack.add(new Runnable() {
+						@Override
+						public void run() {
+							board.rotateLeft();
+						}
+					});
+					action_stack.setSize(1);
 				}
 			}
 
@@ -164,6 +203,14 @@ public class GameController extends JFrame implements BoardEventListener {
 			@Override
 			public void keyTyped(KeyEvent arg0) {}
 		});
+	}
+
+	protected Runnable popAction() {
+		return this.action_stack.pop();
+	}
+
+	protected boolean hasAction() {
+		return this.action_stack.size() > 0;
 	}
 
 	public static void main(String[] args) {
