@@ -14,8 +14,8 @@ import javax.swing.JPanel;
 public class GameController extends JFrame implements BoardEventListener, KeyListener, WindowListener {
 
 	private static final long serialVersionUID = -5592605328768740246L;
-	private GameLoop gameLoop;
-	private GamePanel panel;
+	private TetrisGameLoop gameLoop;
+	private JPanel panel;
 	private Board board;
 	private ScoreCounter counter;
 	private Timer timer;
@@ -23,7 +23,7 @@ public class GameController extends JFrame implements BoardEventListener, KeyLis
 
 	public GameController() throws HeadlessException {
 		super();
-		panel = new GamePanel();
+		panel = new JPanel();
 		board = new Board(14, 7);
 		board.setListener(this);
 		counter = new ScoreCounter();
@@ -148,7 +148,7 @@ public class GameController extends JFrame implements BoardEventListener, KeyLis
 	public void windowClosed(WindowEvent arg0) {}
 	
 	@Override
-	public void onDrop(Piece tShape) {}
+	public void onDrop(Tetromino tShape) {}
 
 	@Override
 	public void onTick() {}
