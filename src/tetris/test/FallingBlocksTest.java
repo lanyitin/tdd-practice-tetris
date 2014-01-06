@@ -17,7 +17,6 @@ import tetris.impl.CantDropTetrominoException;
  */
 @RunWith(NestedJUnit.class)
 public class FallingBlocksTest extends Assert {
-
     // Step 1: Starting small
     // - See the README for motivation
     // - Next step: RotatingPiecesOfBlocksTest

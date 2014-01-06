@@ -2,7 +2,7 @@ package tetris.impl;
 
 public interface BoardEventListener {
 
-	public void onDrop(Piece tShape);
+	public void onDrop(Tetromino tShape);
 
 	public void onTick();
 

@@ -1,8 +1,16 @@
 package tetris.impl;
 
-public class Tetromino extends Piece{
-	public Tetromino(String inputString) {
-		super(inputString);
+public class Tetromino{
+	private int width;
+	private int height;
+	private char[] string;
+	
+	public Tetromino (String inputString) {	
+		String[] lines = inputString.split("\n");
+		height = lines.length;
+		
+		width = lines[0].length();
+		this.string = inputString.replaceAll("\n", "").toCharArray();
 	}
 	
 	public Tetromino rotateRight() {
@@ -15,6 +23,19 @@ public class Tetromino extends Piece{
 		}
 		return new Tetromino(newData);
 	}
+	
+	@Override
+	public String toString() {
+		String string = new String();
+		for (int row = 0; row < getHeight(); row++) {
+			for (int col = 0; col < getWidth(); col++) {
+				string += this.string[row * getWidth() + col];
+			}
+			string += "\n";
+		}
+		
+		return string;
+	}
 
 	public Tetromino rotateLeft() {
 		String newData = "";
@@ -25,6 +46,18 @@ public class Tetromino extends Piece{
 			newData += "\n";
 		}
 		return new Tetromino(newData);
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
+	public char[] getChars() {
+		return string.clone();
 	}
 	
 	static class H_Tetromino extends Tetromino{

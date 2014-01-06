@@ -9,7 +9,6 @@ public abstract class GameLoop implements Runnable{
 	private final long period = (long) (1000.0 / FPS);
 	private long gameStartTime;
 	private volatile AtomicBoolean running;
-	//private long prevStatsTime;
 	protected int framesSkipped;
 	private Thread animateThread;
 
@@ -34,7 +33,6 @@ public abstract class GameLoop implements Runnable{
 		try {
 			animateThread.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
