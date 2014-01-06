@@ -9,7 +9,7 @@ public class Board {
     private ArrayList<Character> baseState;
 	private ArrayList<Character> currentState;
 	private ArrayList<Character> nextState;
-	private Piece fallingBlock;
+	private Tetromino fallingBlock;
 	private int blockX;
 	private int blockY;
 	private BoardEventListener listener;
@@ -55,7 +55,7 @@ public class Board {
 		return this.fallingBlock != null;
 	}
 
-	public void drop(Piece tShape) throws CantDropTetrominoException{
+	public void drop(Tetromino tShape) throws CantDropTetrominoException{
 		if (hasFalling()) {
 			throw new IllegalStateException("already falling");
 		}
@@ -128,11 +128,11 @@ public class Board {
 		this.listener = listener;
 	}
     
-	private void switchTetromino(Piece piece) {
+	private void switchTetromino(Tetromino piece) {
 		if (!hasFalling()) {
 			return;
 		}
-		Piece tmpPiece = fallingBlock;
+		Tetromino tmpPiece = fallingBlock;
 		fallingBlock = piece;
 		
 		generateNextState();

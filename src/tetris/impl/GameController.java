@@ -7,10 +7,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Queue;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class GameController extends JFrame implements BoardEventListener, KeyListener, WindowListener {
@@ -36,8 +34,6 @@ public class GameController extends JFrame implements BoardEventListener, KeyLis
 		this.add(panel);
 		this.setSize(300, 400);
 
-		timer.schedule(new TetrisTimerTask(this), 0, 1000);
-
 		this.addWindowListener(this);
 		this.addKeyListener(this);
 	}
@@ -56,15 +52,6 @@ public class GameController extends JFrame implements BoardEventListener, KeyLis
 	
 	public GameLoop getGameLoop() {
 		return this.gameLoop;
-	}
-
-
-	protected Runnable popAction() {
-		return this.action_queue.poll();
-	}
-
-	protected boolean hasAction() {
-		return this.action_queue.size() > 0;
 	}
 
 	@Override
@@ -111,15 +98,32 @@ public class GameController extends JFrame implements BoardEventListener, KeyLis
 			});
 		}
 	}
-	@Override
-	public void windowClosing(WindowEvent arg0) {
+
+	public void stopGame() {
 		gameLoop.stop();
+		timer.cancel();
 		System.exit(0);
 	}
 
+	public void startGame() {
+		gameLoop.start();
+		timer.schedule(new TetrisTimerTask(this), 0, 1000);
+	}
+	
+	public void performActionIfQueueIsNotEmpty() {
+		if (this.action_queue.size() > 0) {
+			this.action_queue.poll().run();
+		}
+	}
+	
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		stopGame();
+	}
+	
 	@Override
 	public void windowOpened(WindowEvent arg0) {
-		gameLoop.start();
+		startGame();
 	}
 
 	@Override

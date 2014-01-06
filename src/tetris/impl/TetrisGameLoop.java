@@ -18,9 +18,6 @@ public class TetrisGameLoop extends GameLoop {
 
 		@Override
 		public void gameRender() {
-			if (controller.hasAction()) {
-				controller.popAction().run();
-			}
 			if (doubleBufferImage == null) {
 				doubleBufferImage = controller.getPanel().createImage(controller.getPanel().getWidth(), controller.getPanel().getHeight());
 			}
@@ -69,7 +66,7 @@ public class TetrisGameLoop extends GameLoop {
 
 		@Override
 		public void gameUpdate() {
-			// System.out.println("Game is running!!");
+			controller.performActionIfQueueIsNotEmpty();
 		}
 
 }
