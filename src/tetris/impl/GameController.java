@@ -14,12 +14,12 @@ import javax.swing.JPanel;
 public class GameController extends JFrame implements BoardEventListener, KeyListener, WindowListener {
 
 	private static final long serialVersionUID = -5592605328768740246L;
-	private TetrisGameLoop gameLoop;
-	private JPanel panel;
-	private Board board;
-	private ScoreCounter counter;
-	private Timer timer;
-	private Queue<Runnable> action_queue;
+	private final TetrisGameLoop gameLoop;
+	private final JPanel panel;
+	private final Board board;
+	private final ScoreCounter counter;
+	private final Timer timer;
+	private final Queue<Runnable> action_queue;
 
 	public GameController() throws HeadlessException {
 		super();
