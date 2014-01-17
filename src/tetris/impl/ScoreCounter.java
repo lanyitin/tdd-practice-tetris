@@ -13,7 +13,7 @@ public class ScoreCounter {
 	public void receiveNumberOfClearedLines(int num) {
 		if (num > 0) {
 			currentComboCount += num;
-			score += currentComboCount * 10;
+			score += num * 10;
 		} else {
 			currentComboCount = 0;
 		}
