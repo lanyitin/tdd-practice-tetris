@@ -642,6 +642,45 @@ public class TestBoard {
 				"......\n", board1.toString());
 	}
 
+	@Test
+	public void testState() throws CantDropTetrominoException {
+		
+		Board b = new Board(6,8);
+		b.drop(Tetromino.I_SHAPE);
+		b.rotateLeft();
+		b.moveLeft(); b.moveLeft();
+		
+		assertTrue(b.hasFalling()) ; 
+		b.tick();
+		b.tick();
+		b.tick();
+		b.tick();
+		b.tick();
+		
+		assertEquals("........\n"
+					+"........\n"
+					+"........\n"
+					+"........\n"
+					+"........\n"
+					+"IIII....\n", b.toString()) ;
+		assertFalse(b.hasFalling()) ;
+		b.drop(Tetromino.I_SHAPE);
+		b.rotateLeft();
+		b.moveRight(); b.moveRight();
+		b.tick(); b.tick(); b.tick();
+		b.tick();
+		
+		assertEquals("........\n"
+					+"........\n"
+					+"........\n"
+					+"........\n"
+					+"........\n"
+					+"........\n", b.toString()) ;
+		
+		//GameController g = new GameController() ;
+		//TetrisTimerTask t = new TetrisTimerTask(g) ;
 
+		
+	}
 
 }
